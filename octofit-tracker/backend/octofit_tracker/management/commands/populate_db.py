@@ -1,17 +1,22 @@
+
 from django.core.management.base import BaseCommand
 from octofit_tracker.models import User, Team, Activity, Workout, Leaderboard
 from django.utils import timezone
+from pymongo import MongoClient
 
 class Command(BaseCommand):
     help = 'Populate the octofit_db database with test data'
 
+
     def handle(self, *args, **options):
-        # Delete all data
-        Leaderboard.objects.all().delete()
-        Activity.objects.all().delete()
-        Workout.objects.all().delete()
-        User.objects.all().delete()
-        Team.objects.all().delete()
+        # Drop collections directly using pymongo to avoid Djongo ORM issues
+        client = MongoClient('localhost', 27017)
+        db = client['octofit_db']
+        db['leaderboard'].drop()
+        db['activities'].drop()
+        db['workouts'].drop()
+        db['users'].drop()
+        db['teams'].drop()
 
         # Create teams
         marvel = Team.objects.create(name='Marvel')
