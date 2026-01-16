@@ -26,12 +26,16 @@ router.register(r'activities', views.ActivityViewSet, basename='activity')
 router.register(r'workouts', views.WorkoutViewSet, basename='workout')
 router.register(r'leaderboard', views.LeaderboardViewSet, basename='leaderboard')
 
+
+# base_urlはCODESPACE_NAME環境変数を利用し、curl等でのAPIテスト時に参照可能
 import os
 codespace_name = os.environ.get('CODESPACE_NAME')
 if codespace_name:
     base_url = f"https://{codespace_name}-8000.app.github.dev"
 else:
     base_url = "http://localhost:8000"
+
+# 例: https://$CODESPACE_NAME-8000.app.github.dev/api/activities/
 
 urlpatterns = [
     path('admin/', admin.site.urls),
